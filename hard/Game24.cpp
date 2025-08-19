@@ -57,6 +57,7 @@ int applyOperation(char op, int l, int r)
 
 void getAllConfigurationsForFirst(vector<int> set, vector<int> rest, vector<vector<int>> &configurations)
 {
+    cout << "called with rest of size: " << rest.size() << endl;
     if (rest.empty()) 
     {
         configurations.push_back(set);
@@ -64,14 +65,14 @@ void getAllConfigurationsForFirst(vector<int> set, vector<int> rest, vector<vect
     else
     {
         vector<int>::iterator itr = rest.begin();
-        vector<int>::iterator next;
-        while (itr != rest.end())
+        for (size_t i = 0; i < rest.size(); i++)
         {
-            cout << *itr  << "//" << rest.size() << endl;
-            set.push_back(*itr);
-            itr = rest.erase(itr);
-            getAllConfigurationsForFirst(set, rest, configurations);
-        }
+            set.push_back(rest.at(i)); // needs to be cleared or smt
+            vector<int> rest_cpy = rest;
+            cout << "deleting this itr: " << *(rest_cpy.begin() + i) << " with index: " << i << endl;
+            rest_cpy.erase(rest_cpy.begin() + i);
+            getAllConfigurationsForFirst(set, rest_cpy, configurations);
+        }        
     }
 }
 vector<vector<int>> generateOrders(vector<int> &cards)
@@ -103,11 +104,12 @@ bool judgePoint24(vector<int>& cards) {
 
 int main()
 {
-    vector<int> pairs = {4, 1, 8, 7};
+    vector<int> cards = {4, 1, 8, 7};
     vector<vector<int>> configuration = {};
-    getAllConfigurationsForFirst({}, pairs, configuration);
+    getAllConfigurationsForFirst({}, cards, configuration);
     for (vector<int> v : configuration)
     {
+        cout << "config: " << endl;
         for (int i : v)
         {
             cout << i << " ";
