@@ -54,6 +54,14 @@ int applyOperation(char op, int l, int r)
     default: return 0;
     }
 }
+int evaluateExpression(vector<int> cards, vector<char> ops)
+{
+    for (size_t i = 0; i < cards.size() - 1; i++)
+    {
+        cards.at(i+1) = applyOperation(ops.at(i), cards.at(i), cards.at(i+1));
+    }
+    return cards.at(cards.size()-1);
+}
 
 void getAllConfigurationsForFirst(vector<int> set, vector<int> rest, vector<vector<int>> &configurations)
 {
@@ -64,14 +72,16 @@ void getAllConfigurationsForFirst(vector<int> set, vector<int> rest, vector<vect
     }
     else
     {
-        vector<int>::iterator itr = rest.begin();
         for (size_t i = 0; i < rest.size(); i++)
         {
-            set.push_back(rest.at(i)); // needs to be cleared or smt
+            vector<int> set_cpy = set;
             vector<int> rest_cpy = rest;
+
+            set_cpy.push_back(rest.at(i));
+
             cout << "deleting this itr: " << *(rest_cpy.begin() + i) << " with index: " << i << endl;
             rest_cpy.erase(rest_cpy.begin() + i);
-            getAllConfigurationsForFirst(set, rest_cpy, configurations);
+            getAllConfigurationsForFirst(set_cpy, rest_cpy, configurations);
         }        
     }
 }
@@ -105,15 +115,19 @@ bool judgePoint24(vector<int>& cards) {
 int main()
 {
     vector<int> cards = {4, 1, 8, 7};
-    vector<vector<int>> configuration = {};
-    getAllConfigurationsForFirst({}, cards, configuration);
-    for (vector<int> v : configuration)
-    {
-        cout << "config: " << endl;
-        for (int i : v)
-        {
-            cout << i << " ";
-        }
-        cout << endl;
-    }
+    vector<char> ops = {'+', '*', '-'};
+    cout << evaluateExpression(cards, ops) << endl;
+    // vector<vector<int>> configuration = {};
+    // getAllConfigurationsForFirst({}, cards, configuration);
+    // int i = 0;
+    // for (vector<int> v : configuration)
+    // {
+    //     cout << "config: " << i << endl;
+    //     for (int i : v)
+    //     {
+    //         cout << i << " ";
+    //     }
+    //     i++;
+    //     cout << endl;
+    // }
 }
