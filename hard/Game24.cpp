@@ -63,7 +63,7 @@ int evaluateExpression(vector<int> cards, vector<char> ops)
     return cards.at(cards.size()-1);
 }
 
-void getAllConfigurationsForFirst(vector<int> set, vector<int> rest, vector<vector<int>> &configurations)
+void getAllConfigurationsForCards(vector<int> set, vector<int> rest, vector<vector<int>> &configurations)
 {
     cout << "called with rest of size: " << rest.size() << endl;
     if (rest.empty()) 
@@ -81,28 +81,33 @@ void getAllConfigurationsForFirst(vector<int> set, vector<int> rest, vector<vect
 
             cout << "deleting this itr: " << *(rest_cpy.begin() + i) << " with index: " << i << endl;
             rest_cpy.erase(rest_cpy.begin() + i);
-            getAllConfigurationsForFirst(set_cpy, rest_cpy, configurations);
+            getAllConfigurationsForCards(set_cpy, rest_cpy, configurations);
         }        
     }
 }
-vector<vector<int>> generateOrders(vector<int> &cards)
-{
-    vector<vector<int>> all_orders;
-    for (vector<int>::iterator it = cards.begin(); it != cards.end(); it++)
-    {
-        vector<int> cpy_cards;
-        std::copy( cards.begin(), cards.end(), std::back_inserter(cpy_cards));
-        cpy_cards.erase(it);
-        int first = *it;
-        
-        // all_orders.push_back(one_order);
-    }
-    return all_orders;
-}
-vector<string> generateExpressions(vector<vector<int>> &all_pairs, vector<char> &ops)
+
+vector<string> generateExpressions(vector<vector<int>> &all_pairs, vector<vector<char>> &ops)
 {
     vector<string> expressions;
-    for (vector<int> v : all_pairs)
+    string s;
+    for (vector<int> order : all_pairs)
+    {
+        for (vector<char> all_op : ops)
+        {
+            s = "";
+            for (int i = 0; i < 3; i++)
+            {
+                s += to_string(order.at(i)) + to_string(all_op.at(i)); 
+            }
+            s += to_string(order.at(3));
+            expressions.push_back(s);
+        }
+    }
+}
+
+vector<vector<vector<char>>> getOperationsForConfig(int nb_config, vector<char> ops)
+{
+    for (int i = 0; i < nb_config; i++)
     {
 
     }
@@ -114,11 +119,11 @@ bool judgePoint24(vector<int>& cards) {
 
 int main()
 {
-    vector<int> cards = {4, 1, 8, 7};
-    vector<char> ops = {'+', '*', '-'};
-    cout << evaluateExpression(cards, ops) << endl;
+    vector<int> cards = {1, 2, 3, 4};
+    vector<char> ops = {'+', '-'};
+    // cout << evaluateExpression(cards, ops) << endl;
     // vector<vector<int>> configuration = {};
-    // getAllConfigurationsForFirst({}, cards, configuration);
+    // getAllConfigurationsForCards({}, cards, configuration);
     // int i = 0;
     // for (vector<int> v : configuration)
     // {
